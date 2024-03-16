@@ -7,3 +7,11 @@ edition = "2021"
 
 [dependencies]
 image = "*"
+
+[profile.release]
+strip = "symbols"
+lto = "fat"
+codegen-units = 1
+opt-level = 3
+debug = false
+rpath = true
