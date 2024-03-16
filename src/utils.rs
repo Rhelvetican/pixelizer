@@ -1,4 +1,4 @@
-use image::{imageops::FilterType, open, DynamicImage, GenericImageView};
+use image::{imageops::FilterType, open, DynamicImage, GenericImage, GenericImageView};
 use std::{
     clone::Clone,
     cmp::PartialEq,
@@ -35,12 +35,21 @@ pub fn pixelize(source: DynamicImage) -> DynamicImage {
     scale(
         source.resize(new_width, new_height, FilterType::Nearest),
         ratio,
+        width,
+        height,
     )
 }
 
-fn scale(source: DynamicImage, rate: u32) -> DynamicImage {
-    let (width, height) = source.dimensions();
-    let new_width = width * rate;
-    let new_height = height * rate;
-    source.resize(new_width, new_height, FilterType::Gaussian)
+fn scale(source: DynamicImage, rate: u32, w: u32, h: u32) -> DynamicImage {
+    let mut result = DynamicImage::new_rgb8(w, h);
+    for (x, y, col) in source.pixels() {
+        let x = x * rate;
+        let y = y * rate;
+        for i in 0..rate {
+            for j in 0..rate {
+                result.put_pixel(x + i, y + j, col);
+            }
+        }
+    }
+    result
 }
