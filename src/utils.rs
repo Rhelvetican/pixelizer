@@ -45,8 +45,8 @@ fn scale(source: DynamicImage, rate: u32, w: u32, h: u32) -> DynamicImage {
     for (x, y, col) in source.pixels() {
         let x = x * rate;
         let y = y * rate;
-        for i in 0..rate {
-            for j in 0..rate {
+        for i in 0..=rate {
+            for j in 0..=rate {
                 result.put_pixel(x + i, y + j, col);
             }
         }
