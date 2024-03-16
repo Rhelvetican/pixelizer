@@ -32,13 +32,15 @@ pub fn pixelize(source: DynamicImage) -> DynamicImage {
     let ratio = gcd(width, height) / 8;
     let new_width = width / ratio;
     let new_height = height / ratio;
-    source.resize(new_width, new_height, FilterType::Nearest);
-    scale(source, ratio)
+    scale(
+        source.resize(new_width, new_height, FilterType::Nearest),
+        ratio,
+    )
 }
 
 fn scale(source: DynamicImage, rate: u32) -> DynamicImage {
     let (width, height) = source.dimensions();
     let new_width = width * rate;
     let new_height = height * rate;
-    source.resize(new_width, new_height, FilterType::Nearest)
+    source.resize(new_width, new_height, FilterType::Gaussian)
 }
