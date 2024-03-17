@@ -23,13 +23,21 @@ pub fn check_image(path: &str) -> bool {
     open(path).is_ok()
 }
 
-pub fn pixelize(source: DynamicImage) -> DynamicImage {
+pub fn pixelize(source: DynamicImage, scale: u32) -> DynamicImage {
     let (width, height) = source.dimensions();
-    let ratio = gcd(width, height) / 8;
-    let new_width = width / ratio;
-    let new_height = height / ratio;
-
-    source
-        .resize(new_width, new_height, FilterType::Nearest)
-        .resize(width, height, FilterType::Nearest)
+    let pixel_size = gcd(width, height);
+    if pixel_size <= 1 {
+        // Basically crop them image into either 16:9 or 9:20 aspect ratio
+        let (rw, rh) = if width > height { (16, 9) } else { (9, 20) };
+        source
+            .resize_exact(rw * scale, rh * scale, FilterType::Nearest)
+            .resize(width, height, FilterType::Nearest)
+    } else {
+        let pixel_size = pixel_size / 8;
+        let new_width = width / pixel_size;
+        let new_height = height / pixel_size;
+        source
+            .resize(new_width, new_height, FilterType::Nearest)
+            .resize(width, height, FilterType::Nearest)
+    }
 }
