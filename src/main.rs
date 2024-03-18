@@ -5,9 +5,31 @@ use utils::FilterMode;
 
 const CONFIG: &str = "config/config.json";
 
+const INTRO: &str = r#"
+__________.__              .__  .__                     
+\______   \__|__  ___ ____ |  | |__|_______ ___________ 
+ |     ___/  \  \/  // __ \|  | |  \___   // __ \_  __ \
+ |    |   |  |>    <\  ___/|  |_|  |/    /\  ___/|  | \/
+ |____|   |__/__/\_ \\___  >____/__/_____ \\___  >__|   
+                   \/    \/              \/    \/       
+ ____   ________    _______      _______                
+ \   \ /   /_   |   \   _  \     \   _  \               
+  \   Y   / |   |   /  /_\  \    /  /_\  \              
+   \     /  |   |   \  \_/   \   \  \_/   \             
+    \___/   |___| /\ \_____  / /\ \_____  /             
+                  \/       \/  \/       \/              
+"#;
+
+const SEPERATOR: &str = r#"
+
+#########################################################
+
+"#;
 fn main() {
     // Initialize the program folders.
     utils::init();
+
+    println!("{}", INTRO);
 
     let config = utils::read_json(CONFIG).unwrap();
     let contents = read_dir("input").unwrap();
@@ -22,6 +44,7 @@ fn main() {
         if manual {
             match file {
                 Ok(file) => {
+                    println!("{}", SEPERATOR);
                     let path = file.path();
                     if utils::check_image(path.to_str().unwrap()) {
                         let img = utils::read_image(path.to_str().unwrap());
@@ -40,14 +63,19 @@ fn main() {
                         println!("Saved image to {}", output_path);
                         file_count += 1;
                     } else {
+                        println!("{}", SEPERATOR);
                         println!("Not an image. Skipping... {}", path.to_str().unwrap())
                     }
                 }
-                Err(e) => println!("Error reading file: {}", e),
+                Err(e) => {
+                    println!("{}", SEPERATOR);
+                    println!("Error reading file: {}", e)
+                }
             }
         } else {
             match file {
                 Ok(file) => {
+                    println!("{}", SEPERATOR);
                     let path = file.path();
                     if utils::check_image(path.to_str().unwrap()) {
                         let img = utils::read_image(path.to_str().unwrap());
@@ -58,13 +86,18 @@ fn main() {
                         println!("Saved image to {}", output_path);
                         file_count += 1;
                     } else {
+                        println!("{}", SEPERATOR);
                         println!("Not an image. Skipping... {}", path.to_str().unwrap())
                     }
                 }
-                Err(e) => println!("Error reading file: {}", e),
+                Err(e) => {
+                    println!("{}", SEPERATOR);
+                    println!("Error reading file: {}", e)
+                }
             }
         }
     }
+    println!("{}", SEPERATOR);
     if file_count == 0 {
         println!("No images found in the input folder.");
     } else {
