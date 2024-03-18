@@ -1,7 +1,7 @@
 mod utils;
 use rprompt::prompt_reply;
 use std::{
-    fs::{read_dir, DirBuilder},
+    fs::{read_dir, write, DirBuilder},
     path::Path,
 };
 
@@ -14,6 +14,16 @@ fn main() {
     }
     if !Path::new("config").exists() {
         DirBuilder::new().create("config").unwrap();
+    }
+    if !Path::new("config/config.json").exists() {
+        let default_config = r#"{
+            "manual": false,
+            "config": {
+                "scale": 8,
+                "blur_radius": 3
+            }
+        }"#;
+        write("config/config.json", default_config).unwrap();
     }
     let contents = read_dir("input").unwrap();
 
