@@ -5,7 +5,15 @@ use serde_json::{
     from_reader, ser::PrettyFormatter, to_writer_pretty, Result as SerdeJsonResult, Serializer,
     Value,
 };
-use std::{clone::Clone, cmp::PartialEq, fs::File, io::BufReader, ops::Rem, vec::Vec};
+use std::{
+    clone::Clone,
+    cmp::PartialEq,
+    fs::{write, DirBuilder, File},
+    io::BufReader,
+    ops::Rem,
+    path::Path,
+    vec::Vec,
+};
 
 fn gcd<T>(a: T, b: T) -> T
 where
@@ -67,4 +75,26 @@ pub fn write_json(path: &str, value: Value) -> SerdeJsonResult<()> {
     let mut ser = Serializer::with_formatter(&mut buf, fmt);
     value.serialize(&mut ser).unwrap();
     to_writer_pretty(file, &value)
+}
+
+pub fn init() {
+    if !Path::new("output").exists() {
+        DirBuilder::new().create("output").unwrap();
+    }
+    if !Path::new("input").exists() {
+        DirBuilder::new().create("input").unwrap();
+    }
+    if !Path::new("config").exists() {
+        DirBuilder::new().create("config").unwrap();
+    }
+    if !Path::new("config/config.json").exists() {
+        let default_config = r#"{
+            "manual": false,
+            "config": {
+                "scale": 8,
+                "blur_radius": 3
+            }
+        }"#;
+        write("config/config.json", default_config).unwrap();
+    }
 }
