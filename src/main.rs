@@ -45,7 +45,6 @@ fn main() {
                         let img = utils::read_image(path.to_str().unwrap());
                         let output_path =
                             format!("output/{}.png", path.file_stem().unwrap().to_str().unwrap());
-
                         let scale = config["scale"].as_u64().unwrap_or(8) as u32;
                         let radius = config["radius"].as_u64().unwrap_or(3) as u32;
                         let img = utils::pixelize(img, scale, radius);
