@@ -3,7 +3,7 @@ use rprompt::prompt_reply;
 use std::{fs::read_dir, thread::sleep, time::Duration};
 use utils::FilterMode;
 
-const CONFIG: &str = "config/config.json";
+pub const CONFIG: &str = "config/config.json";
 
 const INTRO: &str = r#"
 __________.__              .__  .__                     

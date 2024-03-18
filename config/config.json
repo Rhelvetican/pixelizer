@@ -4,6 +4,11 @@
         "scale": 8,
         "blur_radius": 6,
         "filter_mode": "median",
-        "wait_time": 0.5
+        "wait_time": 0.5,
+        "noise": {
+            "enabled": true,
+            "mean": 0.25,
+            "standard_deviation": 0.125
+        }
     }
 }

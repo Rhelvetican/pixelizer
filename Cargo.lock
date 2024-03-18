@@ -692,6 +692,7 @@ version = "1.0.1"
 dependencies = [
  "image",
  "imageproc",
+ "rand",
  "rprompt",
  "serde",
  "serde_json",

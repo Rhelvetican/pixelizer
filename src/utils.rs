@@ -2,7 +2,11 @@ use image::{
     imageops::{blur, FilterType},
     open, DynamicImage, GenericImageView, ImageBuffer,
 };
-use imageproc::filter::{gaussian_blur_f32, median_filter};
+use imageproc::{
+    filter::{gaussian_blur_f32, median_filter},
+    noise::gaussian_noise,
+};
+use rand::{thread_rng, Rng};
 use serde_json::{from_reader, Result, Value};
 use std::{
     clone::Clone,
@@ -84,12 +88,24 @@ fn pixelize_image(
     h: u32,
     filter_mode: FilterMode,
 ) -> DynamicImage {
+    let config = read_json(crate::CONFIG).unwrap();
+    let noise_enabled = config["config"]["noise"]["enabled"]
+        .as_bool()
+        .unwrap_or(false);
+    let mean = config["config"]["noise"]["mean"].as_f64().unwrap_or(0f64);
+    let stddev = config["config"]["noise"]["stddev"].as_f64().unwrap_or(0f64);
+    let seed = thread_rng().gen_range(u64::MIN..u64::MAX);
     let (width, height) = source.dimensions();
     let source: ImageBuffer<_, Vec<_>> = ImageBuffer::<image::Rgb<u8>, Vec<u8>>::from(source);
     let source = match filter_mode {
         FilterMode::Median => median_filter(&source, radius, radius),
         FilterMode::Gaussian => gaussian_blur_f32(&source, radius as f32 / 3f32),
         FilterMode::Classic => blur(&source, radius as f32 / 3f32),
+    };
+    let source = if noise_enabled {
+        gaussian_noise(&source, mean, stddev, seed)
+    } else {
+        source
     };
     DynamicImage::from(source)
         .resize(w, h, FilterType::Nearest)
@@ -116,7 +132,12 @@ pub fn init() {
                 "scale": 8,
                 "blur_radius": 6,
                 "filter_mode": "median",
-                "wait_time": 0.5
+                "wait_time": 0.5,
+                "noise": {
+                    "enabled": true,
+                    "mean": 0.25,
+                    "standard_deviation": 0.25
+                }
             }
         }"#;
         write("config/config.json", default_config).unwrap();

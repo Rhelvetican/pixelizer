@@ -9,6 +9,7 @@ imageproc = "*"
 rprompt = "*"
 serde = { version = "1", features = ["derive"] }
 serde_json = {version = "1", features = ["preserve_order"] }
+rand = "*"
 
 [profile.release]
 strip = "symbols"
