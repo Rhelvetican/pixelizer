@@ -14,6 +14,7 @@ fn main() {
     let scale = config["config"]["scale"].as_u64().unwrap_or(8) as u32;
     let radius = config["config"]["radius"].as_u64().unwrap_or(3) as u32;
     let manual = config["manual"].as_bool().unwrap();
+    let mut file_count = 0;
 
     for file in contents {
         if manual {
@@ -35,6 +36,7 @@ fn main() {
                         let img = utils::pixelize(img, scale, radius);
                         img.save(&output_path).unwrap();
                         println!("Saved image to {}", output_path);
+                        file_count += 1;
                     } else {
                         println!("Not an image. Skipping... {}", path.to_str().unwrap())
                     }
@@ -52,6 +54,7 @@ fn main() {
                         let img = utils::pixelize(img, scale, radius);
                         img.save(&output_path).unwrap();
                         println!("Saved image to {}", output_path);
+                        file_count += 1;
                     } else {
                         println!("Not an image. Skipping... {}", path.to_str().unwrap())
                     }
@@ -59,5 +62,10 @@ fn main() {
                 Err(e) => println!("Error reading file: {}", e),
             }
         }
+    }
+    if file_count == 0 {
+        println!("No images found in the input folder.");
+    } else {
+        println!("Processed {} images.", file_count);
     }
 }

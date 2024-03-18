@@ -1,6 +1,6 @@
 use image::{imageops::FilterType, open, DynamicImage, GenericImageView, ImageBuffer};
 use imageproc::filter::median_filter;
-use serde_json::{from_reader, Result as SerdeJsonResult, Value};
+use serde_json::{from_reader, Result, Value};
 use std::{
     clone::Clone,
     cmp::PartialEq,
@@ -61,7 +61,7 @@ fn pixelize_image(source: DynamicImage, radius: u32, w: u32, h: u32) -> DynamicI
         .resize(width, height, FilterType::Nearest)
 }
 
-pub fn read_json(path: &str) -> SerdeJsonResult<Value> {
+pub fn read_json(path: &str) -> Result<Value> {
     let json_reader = BufReader::new(match File::open(path) {
         Ok(file) => file,
         Err(_) => panic!("Path {} not found.", path),
