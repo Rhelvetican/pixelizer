@@ -1,6 +1,6 @@
 mod utils;
 use rprompt::prompt_reply;
-use std::fs::read_dir;
+use std::{fs::read_dir, thread::sleep, time::Duration};
 use utils::FilterMode;
 
 const CONFIG: &str = "config/config.json";
@@ -12,12 +12,12 @@ __________.__              .__  .__
  |    |   |  |>    <\  ___/|  |_|  |/    /\  ___/|  | \/
  |____|   |__/__/\_ \\___  >____/__/_____ \\___  >__|   
                    \/    \/              \/    \/       
- ____   ________    _______      _______                
- \   \ /   /_   |   \   _  \     \   _  \               
-  \   Y   / |   |   /  /_\  \    /  /_\  \              
-   \     /  |   |   \  \_/   \   \  \_/   \             
-    \___/   |___| /\ \_____  / /\ \_____  /             
-                  \/       \/  \/       \/              
+ ____   ________    _______       ____               
+ \   \ /   /_   |   \   _  \     |_   |              
+  \   Y   / |   |   /  /_\  \     |   |              
+   \     /  |   |   \  \_/   \    |   |              
+    \___/   |___| /\ \_____  / /\ |___|              
+                  \/       \/  \/                   
 "#;
 
 const SEPERATOR: &str = r#"
@@ -37,10 +37,14 @@ fn main() {
     let scale = config["config"]["scale"].as_u64().unwrap_or(8) as u32;
     let radius = config["config"]["blur_radius"].as_u64().unwrap_or(3) as u32;
     let mode = FilterMode::from_str(config["config"]["filter_mode"].as_str().unwrap());
+    let wait_time = config["config"]["wait_time"].as_f64().unwrap_or(0f64);
     let manual = config["manual"].as_bool().unwrap();
     let mut file_count = 0;
 
     for file in contents {
+        if wait_time > 0f64 {
+            sleep(Duration::from_secs_f64(wait_time));
+        }
         if manual {
             match file {
                 Ok(file) => {

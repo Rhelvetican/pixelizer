@@ -3,6 +3,7 @@
     "config": {
         "scale": 8,
         "blur_radius": 6,
-        "filter_mode": "median"
+        "filter_mode": "median",
+        "wait_time": 0.5
     }
 }
