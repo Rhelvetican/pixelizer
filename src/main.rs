@@ -1,6 +1,7 @@
 mod utils;
 use rprompt::prompt_reply;
 use std::fs::read_dir;
+use utils::FilterMode;
 
 const CONFIG: &str = "config/config.json";
 
@@ -12,7 +13,8 @@ fn main() {
     let contents = read_dir("input").unwrap();
 
     let scale = config["config"]["scale"].as_u64().unwrap_or(8) as u32;
-    let radius = config["config"]["radius"].as_u64().unwrap_or(3) as u32;
+    let radius = config["config"]["blur_radius"].as_u64().unwrap_or(3) as u32;
+    let mode = FilterMode::from_str(config["config"]["filter_mode"].as_str().unwrap());
     let manual = config["manual"].as_bool().unwrap();
     let mut file_count = 0;
 
@@ -33,7 +35,7 @@ fn main() {
                             Ok(radius) => radius.parse::<u32>().unwrap_or(3),
                             Err(_) => 3,
                         };
-                        let img = utils::pixelize(img, scale, radius);
+                        let img = utils::pixelize(img, scale, radius, mode);
                         img.save(&output_path).unwrap();
                         println!("Saved image to {}", output_path);
                         file_count += 1;
@@ -51,7 +53,7 @@ fn main() {
                         let img = utils::read_image(path.to_str().unwrap());
                         let output_path =
                             format!("output/{}.png", path.file_stem().unwrap().to_str().unwrap());
-                        let img = utils::pixelize(img, scale, radius);
+                        let img = utils::pixelize(img, scale, radius, mode);
                         img.save(&output_path).unwrap();
                         println!("Saved image to {}", output_path);
                         file_count += 1;
