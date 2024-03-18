@@ -115,7 +115,8 @@ pub fn init() {
             "config": {
                 "scale": 8,
                 "blur_radius": 6,
-                "filter_mode": "median"
+                "filter_mode": "median",
+                "wait_time": 0.5
             }
         }"#;
         write("config/config.json", default_config).unwrap();
