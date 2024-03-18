@@ -11,8 +11,12 @@ fn main() {
     let config = utils::read_json(CONFIG).unwrap();
     let contents = read_dir("input").unwrap();
 
+    let scale = config["config"]["scale"].as_u64().unwrap_or(8) as u32;
+    let radius = config["config"]["radius"].as_u64().unwrap_or(3) as u32;
+    let manual = config["manual"].as_bool().unwrap();
+
     for file in contents {
-        if config["manual"].as_bool().unwrap() {
+        if manual {
             match file {
                 Ok(file) => {
                     let path = file.path();
@@ -45,8 +49,6 @@ fn main() {
                         let img = utils::read_image(path.to_str().unwrap());
                         let output_path =
                             format!("output/{}.png", path.file_stem().unwrap().to_str().unwrap());
-                        let scale = config["scale"].as_u64().unwrap_or(8) as u32;
-                        let radius = config["radius"].as_u64().unwrap_or(3) as u32;
                         let img = utils::pixelize(img, scale, radius);
                         img.save(&output_path).unwrap();
                         println!("Saved image to {}", output_path);

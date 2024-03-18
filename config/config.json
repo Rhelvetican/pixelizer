@@ -2,6 +2,6 @@
     "manual": false,
     "config": {
         "scale": 8,
-        "blur_radius": 3
+        "blur_radius": 256
     }
 }
