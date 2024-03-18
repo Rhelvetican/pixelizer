@@ -114,7 +114,7 @@ pub fn init() {
             "manual": false,
             "config": {
                 "scale": 8,
-                "blur_radius": 3,
+                "blur_radius": 6,
                 "filter_mode": "median"
             }
         }"#;
